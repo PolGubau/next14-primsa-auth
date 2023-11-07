@@ -1,7 +1,9 @@
+import { authOptions } from "@/app/api/auth/[...nextauth]/route";
+import { getServerSession } from "next-auth/next";
 import Link from "next/link";
 import React from "react";
 
-const NavBar = () => {
+const NavBar = async () => {
   const links = [
     {
       name: "Home",
@@ -12,6 +14,8 @@ const NavBar = () => {
       href: "/dashboard",
     },
   ];
+
+  const session = await getServerSession(authOptions);
 
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900">
@@ -58,6 +62,26 @@ const NavBar = () => {
                 </Link>
               </li>
             ))}
+
+            {session?.user ? (
+              <li>
+                <Link
+                  href="/api/auth/signout"
+                  className="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-neutral-900 md:p-0 dark:text-white md:dark:text-blue-500"
+                >
+                  Logout
+                </Link>
+              </li>
+            ) : (
+              <li>
+                <Link
+                  href="/login"
+                  className="block py-2 pl-3 pr-4 text-white bg-blue-700 rounded md:bg-transparent md:text-neutral-900 md:p-0 dark:text-white md:dark:text-blue-500"
+                >
+                  Login
+                </Link>
+              </li>
+            )}
           </ul>
         </div>
       </div>

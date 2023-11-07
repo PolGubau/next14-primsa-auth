@@ -21,6 +21,7 @@ export default function RegisterPage() {
 
       if (!res?.error) {
         router.push("/dashboard");
+        router.refresh();
         return;
       }
       alert(res?.error);
