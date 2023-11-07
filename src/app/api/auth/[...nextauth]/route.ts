@@ -24,7 +24,7 @@ const authOptions = {
           password: credentials?.password,
         };
 
-        if (!creds.email || !creds.password) return null;
+        if (!creds.email || !creds.password) throw new Error("No creds");
 
         const userFound = await db.user.findUnique({
           where: {
@@ -33,7 +33,7 @@ const authOptions = {
         });
 
         if (!userFound) {
-          return null;
+          throw new Error("User not found");
         }
 
         const matchPassword = await bcrypt.compare(
@@ -41,10 +41,8 @@ const authOptions = {
           userFound.password
         );
 
-        console.log(matchPassword);
-
         if (!matchPassword) {
-          return null;
+          throw new Error("Password is incorrect");
         }
 
         return {
@@ -55,6 +53,10 @@ const authOptions = {
       },
     }),
   ],
+
+  pages: {
+    signIn: "/auth/login",
+  },
 };
 
 const handler = NextAuth(authOptions);
